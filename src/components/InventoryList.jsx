@@ -2,14 +2,13 @@
 // import {auth} from "../firebaseProvider";
 import {
     useDispatch,
-    useSelector
 } from "react-redux";
 import React, {useRef} from "react";
 import Redirect from "react-router-dom/es/Redirect";
-import {auth, firestore} from "../firebaseProvider";
+import {auth} from "../firebaseProvider";
 import Navbar from "./Navbar";
 import {Link} from "react-router-dom";
-import {addItem, addProduct, setLoggedInUser} from "../redux/actions";
+import { addProduct, setLoggedInUser} from "../redux/actions";
 import {useAuthState} from "react-firebase-hooks/auth";
 
 

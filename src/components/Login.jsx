@@ -1,8 +1,8 @@
 import {auth} from "../firebaseProvider";
 import React, {useRef} from "react";
 import {Link, Redirect} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {setError, setLoggedInUser, storeNewUserDataMiddleware} from "../redux/actions";
+import {useDispatch} from "react-redux";
+import {setError, setLoggedInUser} from "../redux/actions";
 // import {useAuthState} from "react-firebase-hooks/auth";
 import Navbar from "./Navbar";
 import {useAuthState} from "react-firebase-hooks/auth";

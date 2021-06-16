@@ -14,7 +14,7 @@ export default function ItemList(props) {
     const items = useSelector(state => state.app.items[categoryName])
     useEffect(() => {
         dispatch(getItems(categoryName))
-    }, [])
+    }, [categoryName, dispatch])
     if (!user) history.push('/')
     return (
         <>
