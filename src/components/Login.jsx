@@ -1,14 +1,15 @@
 import {auth} from "../firebaseProvider";
 import React, {useRef} from "react";
 import {Link, Redirect} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {setError, setLoggedInUser} from "../redux/actions";
-import {useAuthState} from "react-firebase-hooks/auth";
+import {useDispatch, useSelector} from "react-redux";
+import {setError, setLoggedInUser, storeNewUserDataMiddleware} from "../redux/actions";
+// import {useAuthState} from "react-firebase-hooks/auth";
 import Navbar from "./Navbar";
 
 export default function Login(props) {
 
-    const [user] = useAuthState(auth)
+    // const [user] = useAuthState(auth)
+    const user = useSelector(state => state.app.loggedInUser)
     let dispatch = useDispatch()
     const signInWithEmail = async () => {
         try {

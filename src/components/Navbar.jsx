@@ -1,13 +1,14 @@
 import {Link} from "react-router-dom";
 import React from "react";
-import {useAuthState} from "react-firebase-hooks/auth";
+// import {useAuthState} from "react-firebase-hooks/auth";
 import {auth} from "../firebaseProvider";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Redirect from "react-router-dom/es/Redirect";
 import {setError} from "../redux/actions";
 
 export default function Navbar(props) {
-    const [user] = useAuthState(auth)
+    // const [user] = useAuthState(auth)
+    const user = useSelector(state => state.app.loggedInUser)
     let dispatch = useDispatch()
     const signOut = async () => {
         try {
@@ -25,9 +26,6 @@ export default function Navbar(props) {
                     <Link to="/">Home</Link>
                 </li>
                 {user ? <>
-                    <li>
-                        <Link to="/profile">Profile</Link>
-                    </li>
                     <li>
 
                         <button onClick={() => signOut()}>Sign out</button>

@@ -23,8 +23,8 @@ export function storeNewUserDataMiddleware(userData) {
     return async function (dispatch) {
         dispatch(setLoadingStatus(true))
         try {
-            await firestore.collection('users')
-                .add(userData)
+            await firestore.collection('users').doc(userData.id)
+                .set(userData.info)
         } catch (e) {
             dispatch(setError(e))
         }
