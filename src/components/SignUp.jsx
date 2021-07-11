@@ -3,7 +3,6 @@ import {useDispatch} from "react-redux";
 import {setError, storeNewUserDataMiddleware} from "../redux/actions";
 import React, {useRef} from "react";
 import {useHistory} from "react-router-dom";
-import Navbar from "./Navbar";
 
 export default function SignUp(props) {
     let history = useHistory()
@@ -33,7 +32,6 @@ export default function SignUp(props) {
     }
     return (
         <>
-            <Navbar/>
             <input type={'email'} ref={emailRef}/>
             <input type={'password'} ref={passRef}/>
             <button onClick={() => signUpWithPassword(emailRef.current.value, passRef.current.value)}>Sign Up</button>

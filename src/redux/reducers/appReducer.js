@@ -28,21 +28,23 @@ export default function appReducer(state = initialState, action) {
             break
         case SET_LOGGED_IN_USER:
             state.loggedInUser = action.data
+            state.error = ''
             break
         case SET_ITEMS:
             state.items[action.data.category] = action.data.items
+            state.error = ''
             break
         case DELETE_ITEM:
             let updatedItems = state.items[action.data.category].filter((item) => item.id !== action.data.id)
             state.items[action.data.category] = updatedItems
+            state.error = ''
             break
-
         case ADD_ITEMS:
             state.items[action.data.category].push(action.data.product)
+            state.error = ''
             break
         default:
             return state
-        // throw Error('Wrong Action')
     }
     return JSON.parse(JSON.stringify(state))
 }

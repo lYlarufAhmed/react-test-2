@@ -4,12 +4,8 @@ import {
     useDispatch,
 } from "react-redux";
 import React, {useRef} from "react";
-import Redirect from "react-router-dom/es/Redirect";
-import {auth} from "../firebaseProvider";
-import Navbar from "./Navbar";
 import {Link} from "react-router-dom";
-import { addProduct, setLoggedInUser} from "../redux/actions";
-import {useAuthState} from "react-firebase-hooks/auth";
+import { addProduct} from "../redux/actions";
 
 
 export default function InventoryList(props) {
@@ -20,7 +16,6 @@ export default function InventoryList(props) {
     let priceRef = useRef()
     let quantityRef = useRef()
     let descriptionRef = useRef()
-    const [user] = useAuthState(auth)
 
     let dispatch = useDispatch()
     const handleAddProduct = () => {
@@ -37,19 +32,9 @@ export default function InventoryList(props) {
         dispatch(addProduct(values))
         console.log('going to add product ', values)
     }
-    if (!user) return <Redirect to={'/login'}/>
-    else dispatch(setLoggedInUser({
-        id: user.uid,
-        refreshToken: user.refreshToken,
-        email: user.email,
-        username: user.displayName,
-        photoURL: user.displayName,
-        lastLoggedIn: user.metadata.lastSignInTime,
-        creationTime: user.metadata.creationTime,
-    }))
+
     return (
         <>
-            <Navbar/>
             <h1>Inventory list</h1>
             <ul>
                 <li><Link to={'/category/mobiles'}>Mobiles</Link></li>

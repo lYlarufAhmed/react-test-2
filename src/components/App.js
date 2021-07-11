@@ -4,10 +4,13 @@ import InventoryList from "./InventoryList";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import ItemList from "./ItemList";
+import Navbar from "./Navbar";
 
 function App() {
     return (
         <Router>
+
+            <Navbar/>
             <Switch>
                 <Route exact path={'/'} component={InventoryList}/>
                 <Route path={'/login'} component={Login}/>

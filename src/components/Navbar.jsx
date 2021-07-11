@@ -1,24 +1,33 @@
 import {Link} from "react-router-dom";
 import React from "react";
-// import {useAuthState} from "react-firebase-hooks/auth";
 import {auth} from "../firebaseProvider";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import Redirect from "react-router-dom/es/Redirect";
-import {setError} from "../redux/actions";
+import {setError, setLoggedInUser} from "../redux/actions";
+import {useAuthState} from "react-firebase-hooks/auth";
 
 export default function Navbar(props) {
-    // const [user] = useAuthState(auth)
-    const user = useSelector(state => state.app.loggedInUser)
+    const [user] = useAuthState(auth)
     let dispatch = useDispatch()
     const signOut = async () => {
         try {
             await auth.signOut()
+            dispatch(setLoggedInUser(null))
             return <Redirect to={'/login'}/>
-            // remove the loggedin user from redux
         } catch (e) {
             dispatch(setError(e))
         }
     }
+    if (!user) return <Redirect to={'/login'}/>
+    else dispatch(setLoggedInUser({
+        id: user.uid,
+        refreshToken: user.refreshToken,
+        email: user.email,
+        username: user.displayName,
+        photoURL: user.displayName,
+        lastLoggedIn: user.metadata.lastSignInTime,
+        creationTime: user.metadata.creationTime,
+    }))
     return (
         <div>
             <ul>
@@ -35,7 +44,7 @@ export default function Navbar(props) {
                         <Link to="/login">Log in</Link>
                     </li>
                     <li>
-                        <Link to="/signin">Sign in</Link>
+                        <Link to="/signup">Sign Up</Link>
                     </li>
                 </>}
             </ul>
