@@ -1,6 +1,6 @@
 import {auth} from "../firebaseProvider";
-import React, {useRef, useState} from "react";
-import {Redirect} from "react-router-dom";
+import React, {useState} from "react";
+import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {setError, setLoadingStatus, setLoggedInUser} from "../redux/actions";
 import {useAuthState} from "react-firebase-hooks/auth";
@@ -110,8 +110,8 @@ function SignIn({signIn}) {
 }
 
 export default function Login(props) {
-
-    const [user] = useAuthState(auth)
+    const history = useHistory()
+    // const user = useSelector(state => state.app.loggedInUser)
     const loading = useSelector(state => state.app.loading)
     const loggedInUser = useSelector(state => state.app.loggedInUser)
     let dispatch = useDispatch()
@@ -132,6 +132,7 @@ export default function Login(props) {
                     lastLoggedIn: loggedUser.user.metadata.lastSignInTime,
                     creationTime: loggedUser.user.metadata.creationTime,
                 }))
+                history.push('/')
             } catch (e) {
                 console.log(e)
                 dispatch(setError(e))
@@ -141,10 +142,10 @@ export default function Login(props) {
     }
 
 
-    if (user) {
-        dispatch(setLoadingStatus(false))
-        return <Redirect to={'/'}/>
-    }
+    // if (user) {
+    //     dispatch(setLoadingStatus(false))
+    //     return history.push('/')
+    // }
     return (
         <>
             {!loggedInUser ? <>

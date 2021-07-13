@@ -35,12 +35,6 @@ export default function InventoryList(props) {
 
     return (
         <>
-            <h1>Inventory list</h1>
-            <ul>
-                <li><Link to={'/category/mobiles'}>Mobiles</Link></li>
-                <li><Link to={'/category/laptops'}>Laptops</Link></li>
-                <li><Link to={'/category/appliances'}>Appliances</Link></li>
-            </ul>
             <div className={'input-control'}>
                 <input type={'number'} ref={quantityRef} defaultValue={0} name={'quantity'} placeholder={'quantity'}
                        min={0}/>

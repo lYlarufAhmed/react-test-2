@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import React from "react";
 import {auth} from "../firebaseProvider";
 import {useDispatch} from "react-redux";
@@ -6,19 +6,31 @@ import Redirect from "react-router-dom/es/Redirect";
 import {setError, setLoggedInUser} from "../redux/actions";
 import {useAuthState} from "react-firebase-hooks/auth";
 
+import styled from "styled-components"
+import {FlexContainer, Button} from "./Styled";
+
+const NavWrapper = styled(FlexContainer)`
+  background-color: black;
+  color: white;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+`
+
 export default function Navbar(props) {
     const [user] = useAuthState(auth)
     let dispatch = useDispatch()
+    const history = useHistory()
     const signOut = async () => {
         try {
             await auth.signOut()
             dispatch(setLoggedInUser(null))
-            return <Redirect to={'/login'}/>
+            return history.push('/login')
         } catch (e) {
             dispatch(setError(e))
         }
     }
-    if (!user) return <Redirect to={'/login'}/>
+    if (!user) history.push('/login')
     else dispatch(setLoggedInUser({
         id: user.uid,
         refreshToken: user.refreshToken,
@@ -29,27 +41,18 @@ export default function Navbar(props) {
         creationTime: user.metadata.creationTime,
     }))
     return (
-        <div>
-            <ul>
-                <li>
-                    <Link to="/">Home</Link>
-                </li>
-                {user ? <>
-                    <li>
+        <NavWrapper>
+            <li>
+                <Link to="/">Home</Link>
+            </li>
+            <li><Link to={'/category/mobiles'}>Mobiles</Link></li>
+            <li><Link to={'/category/laptops'}>Laptops</Link></li>
+            <li><Link to={'/category/appliances'}>Appliances</Link></li>
+            <li>
+                <Button primary onClick={() => signOut()}>Sign out</Button>
+            </li>
+        </NavWrapper>
 
-                        <button onClick={() => signOut()}>Sign out</button>
-                    </li>
-                </> : <>
-                    <li>
-                        <Link to="/login">Log in</Link>
-                    </li>
-                    <li>
-                        <Link to="/signup">Sign Up</Link>
-                    </li>
-                </>}
-            </ul>
-            <hr/>
-        </div>
     )
 
 }

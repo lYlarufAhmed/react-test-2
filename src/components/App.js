@@ -5,19 +5,25 @@ import Login from "./Login";
 import SignUp from "./SignUp";
 import ItemList from "./ItemList";
 import Navbar from "./Navbar";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {auth} from "../firebaseProvider";
 
 function App() {
+    const [user] = useAuthState(auth)
     return (
+        user ?
         <Router>
-
             <Navbar/>
             <Switch>
                 <Route exact path={'/'} component={InventoryList}/>
-                <Route path={'/login'} component={Login}/>
-                <Route path={'/signup'} component={SignUp}/>
                 <Route path={'/category/:categoryName'} component={ItemList}/>
             </Switch>
-        </Router>
+        </Router>:
+            <Router>
+                <Router exct path={'/'} component={Login}/>
+                <Route path={'/login'} component={Login}/>
+                <Route path={'/signup'} component={SignUp}/>
+            </Router>
     );
 }
 
