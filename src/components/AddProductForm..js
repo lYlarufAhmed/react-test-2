@@ -6,11 +6,12 @@ import Container from "@material-ui/core/Container";
 import React from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {useFormik} from "formik";
-import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {FormControl, InputLabel, MenuItem, Select, Snackbar} from "@material-ui/core";
 import * as Yup from 'yup'
 import {addProduct} from "../redux/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Add} from "@material-ui/icons";
+import {Alert} from "./Login";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -35,11 +36,13 @@ const useStyles = makeStyles((theme) => ({
 export default function AddProductForm() {
     const classes = useStyles();
     let dispatch = useDispatch()
+    let error = useSelector(state => state.app.error)
+    let [success, setSuccess] = React.useState(false)
     const formik = useFormik({
         initialValues: {
             quantity: 1,
             name: '',
-            category: '',
+            categoryName: '',
             price: 0,
             image: '',
             description: '',
@@ -48,17 +51,25 @@ export default function AddProductForm() {
             price: Yup.number().required().positive(),
             quantity: Yup.number().required().positive().integer(),
             name: Yup.string().required().max(30, 'Must be 30 or less characters.'),
-            category: Yup.string().required(),
+            categoryName: Yup.string().required(),
             image: Yup.string().url('Not a valid url!'),
             description: Yup.string().max(200)
         }),
-        onSubmit: values => {
+        onSubmit: async (values, {resetForm}) => {
             dispatch(addProduct(values))
+            setSuccess(true)
+            setTimeout(()=>setSuccess(false), 2000)
+            resetForm()
         }
     })
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
+            <Snackbar open={error || success} autoHideDuration={3000}>
+                <Alert severity={error ? 'error': 'success'}>
+                    {error || 'Success!'}
+                </Alert>
+            </Snackbar>
             <div className={classes.paper}>
 
                 <Typography component="h1" variant="h5">
@@ -97,18 +108,18 @@ export default function AddProductForm() {
                         }}
                     />
                     <FormControl className={classes.formControl}>
-                        <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                        <InputLabel>Category</InputLabel>
                         <Select
-                            error={!!formik.errors.category}
-                            helperText={formik.errors.category}
+                            error={!!formik.errors.categoryName}
+                            helperText={formik.errors.categoryName}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.category}
-                            name={'category'}
+                            value={formik.values.categoryName}
+                            name={'categoryName'}
                             id={'category'}
 
                         >
-                            <MenuItem value={'mobile'}>Mobile</MenuItem>
+                            <MenuItem value={'mobiles'}>Mobile</MenuItem>
                             <MenuItem value={'laptops'}>Laptops</MenuItem>
                             <MenuItem value={'appliances'}>Appliances</MenuItem>
                         </Select>
@@ -163,7 +174,7 @@ export default function AddProductForm() {
                         fullWidth
                         variant="contained"
                         color="primary"
-                        disabled={formik.errors}
+                        disabled={!formik.isValid}
                         className={classes.submit}
                         startIcon={<Add/>}
                     >

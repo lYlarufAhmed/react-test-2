@@ -1,7 +1,7 @@
 import React from "react";
 import {useDispatch} from "react-redux";
 import {deleteItemMiddleWare} from "../redux/actions";
-import {FlexContainer, NameDesc} from "./Styled";
+import {FlexContainer, Img, NameDesc} from "./Styled";
 import DeleteIcon from '@material-ui/icons/Delete';
 import {Paper} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -10,9 +10,11 @@ import Button from "@material-ui/core/Button";
 const useStyles = makeStyles((theme) => ({
 
     paper: {
+        marginTop: theme.spacing(3),
         padding: theme.spacing(2),
         textAlign: 'center',
         color: theme.palette.text.secondary,
+        width: '100%'
     },
 }));
 
@@ -26,20 +28,20 @@ export default function ProductCard({product}) {
     return (
         <Paper className={classes.paper}>
             <FlexContainer>
+                <Img src={product.image}/>
                 <NameDesc>
-                    <p>{product.name}</p>
+                    <h4>{product.name}</h4>
                     <p>{product.description}</p>
                 </NameDesc>
                 <p>${product.price}</p>
             </FlexContainer>
 
-            <div className="control">
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<DeleteIcon/>}
-                    onClick={() => handleDelete(product.id, product.categoryName)}
-                >Delete</Button></div>
+            <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<DeleteIcon/>}
+                onClick={() => handleDelete(product.id, product.categoryName)}
+            >Delete</Button>
         </Paper>
     )
 }

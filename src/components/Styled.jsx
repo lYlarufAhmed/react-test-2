@@ -20,6 +20,8 @@ export const IMG = styled.img`
 
 export const NameDesc = styled(ColumnDir)`
   flex: 1;
+  align-items: start;
+  text-align: left;
 `
 export const GridContainer = styled.div`
   display: grid;
@@ -60,4 +62,11 @@ export const Button = styled.button`
       color: white;
     }
   `}
+`
+export const Img = styled.img`
+  object-fit: contain;
+  width: 10rem;
+  height: auto;
+  margin-right: 2rem;
+  // display: inline-block;
 `

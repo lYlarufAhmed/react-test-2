@@ -41,7 +41,7 @@ export function storeNewUserDataMiddleware(userData) {
             await firestore.collection('users').doc(userData.id)
                 .set(userData.info)
         } catch (e) {
-            dispatch(setError(e))
+            dispatch(setError(e.message))
         }
         dispatch(setLoadingStatus(false))
     }
@@ -62,7 +62,6 @@ export function getItems(category) {
             }
             dispatch(setItems(category, items))
         } catch (e) {
-            console.log(e)
             setError(e.message)
         }
         dispatch(setLoadingStatus(false))
@@ -93,7 +92,6 @@ export function addProduct(product) {
             product.id = newProduct.id
             dispatch(addItem(product, product.categoryName))
         } catch (e) {
-            console.log(e)
             dispatch(setError(e.message))
         }
         dispatch(setLoadingStatus(false))
