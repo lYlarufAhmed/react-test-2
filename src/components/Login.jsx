@@ -1,9 +1,8 @@
 import {auth} from "../firebaseProvider";
-import React, {useState} from "react";
+import React from "react";
 import {useHistory} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {setError, setLoadingStatus, setLoggedInUser} from "../redux/actions";
-import {useAuthState} from "react-firebase-hooks/auth";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,6 +13,8 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Link from "@material-ui/core/Link";
+import {useFormik} from "formik";
+import * as Yup from 'yup'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,89 +37,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function SignIn({signIn}) {
+export default function Login() {
     const classes = useStyles();
-    let [email, setEmail] = useState()
-    let [password, setPassword] = useState()
-
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline/>
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon/>
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign in
-                </Typography>
-                <form className={classes.form} noValidate>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                        onInput={e => {
-                            setEmail(e.target.value)
-                        }}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                        onInput={e => {
-                            setPassword(e.target.value)
-                        }}
-                    />
-
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        disabled={!(email && password)}
-                        onClick={(e) => {
-                            e.preventDefault()
-                            signIn(email, password)
-                        }}
-                    >
-                        Sign In
-                    </Button>
-                    <Grid container>
-                        <Grid item>
-                            <Link href="/signup" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
-
-        </Container>
-    );
-}
-
-export default function Login(props) {
     const history = useHistory()
-    // const user = useSelector(state => state.app.loggedInUser)
-    const loading = useSelector(state => state.app.loading)
-    const loggedInUser = useSelector(state => state.app.loggedInUser)
     let dispatch = useDispatch()
-    const signInWithEmail = async (email, password) => {
-        console.log(email, password)
-        if (email && password) {
-
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: ''
+        },
+        validationSchema: Yup.object({
+            email: Yup.string().required().email(),
+            password: Yup.string().required().min(6)
+        }),
+        onSubmit: async ({email, password}) => {
+            console.log(email, password)
             dispatch(setLoadingStatus(true))
             try {
                 let loggedUser = await auth.signInWithEmailAndPassword(email, password);
@@ -134,29 +67,75 @@ export default function Login(props) {
                 }))
                 history.push('/')
             } catch (e) {
-                console.log(e)
                 dispatch(setError(e))
             }
 
         }
-    }
+    })
 
-
-    // if (user) {
-    //     dispatch(setLoadingStatus(false))
-    //     return history.push('/')
-    // }
     return (
-        <>
-            {!loggedInUser ? <>
-                {/*<input type={'email'} ref={emailRef}/>*/}
-                {/*<input type={'password'} ref={passRef}/>*/}
-                {/*<button className="sign-in" onClick={() => signInWithEmail()}>Login</button>*/}
-                {/*<Link to={'/signup'}>Sign up</Link>*/}
-                <SignIn signIn={signInWithEmail}/>
-            </> : loading && 'Loading......'}
+        <Container component="main" maxWidth="xs">
+            <CssBaseline/>
+            <div className={classes.paper}>
+                <Avatar className={classes.avatar}>
+                    <LockOutlinedIcon/>
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Sign in
+                </Typography>
+                <form className={classes.form} noValidate onSubmit={formik.handleSubmit}>
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        autoFocus
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.email}
+                        error={!!formik.errors.email}
+                        helperText={formik.errors.email}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.password}
+                        error={!!formik.errors.password}
+                        helperText={formik.errors.password}
+                    />
 
-        </>
-    )
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                        disabled={!formik.isValid || formik.isSubmitting}
+                    >
+                        Sign In
+                    </Button>
+                    <Grid container>
+                        <Grid item>
+                            <Link href={ "/signup" } variant="body2">
+                                {"Don't have an account? Sign Up"}
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </form>
+            </div>
 
+        </Container>
+    );
 }

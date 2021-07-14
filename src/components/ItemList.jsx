@@ -6,13 +6,11 @@ import ProductCard from "./ProductCard";
 export default function ItemList(props) {
     const dispatch = useDispatch()
     const categoryName = props.match.params.categoryName
-    // const user = useSelector(state => state.app.loggedInUser)
     const loading = useSelector(state => state.app.loading)
     const items = useSelector(state => state.app.items[categoryName])
     useEffect(() => {
         dispatch(getItems(categoryName))
     }, [categoryName, dispatch])
-    // if (!user) history.push('/')
     return (
         <>
             <div className={'item-list'}>

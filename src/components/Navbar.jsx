@@ -2,7 +2,6 @@ import {Link, useHistory} from "react-router-dom";
 import React from "react";
 import {auth} from "../firebaseProvider";
 import {useDispatch} from "react-redux";
-import Redirect from "react-router-dom/es/Redirect";
 import {setError, setLoggedInUser} from "../redux/actions";
 import {useAuthState} from "react-firebase-hooks/auth";
 
