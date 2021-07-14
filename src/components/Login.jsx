@@ -13,8 +13,10 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Link from "@material-ui/core/Link";
+import MuiAlert from '@material-ui/lab/Alert';
 import {useFormik} from "formik";
 import * as Yup from 'yup'
+import {Snackbar} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     },
 }));
+
+export function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function Login() {
     const classes = useStyles();
@@ -68,11 +74,16 @@ export default function Login() {
                 history.push('/')
             } catch (e) {
                 dispatch(setError(e))
+                setOpenSnackbar(e.message)
             }
 
         }
     })
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
+    const handleClose = (event, reason) => {
+        setOpenSnackbar(false);
+    };
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
@@ -128,11 +139,16 @@ export default function Login() {
                     </Button>
                     <Grid container>
                         <Grid item>
-                            <Link href={ "/signup" } variant="body2">
+                            <Link href={"/signup"} variant="body2">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
                     </Grid>
+                    <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity="error">
+                            {openSnackbar}
+                        </Alert>
+                    </Snackbar>
                 </form>
             </div>
 

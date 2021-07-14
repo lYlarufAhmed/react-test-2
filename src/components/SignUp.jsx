@@ -1,7 +1,7 @@
 import {auth} from "../firebaseProvider";
 import {useDispatch} from "react-redux";
-import {setError, setLoadingStatus, setLoggedInUser, storeNewUserDataMiddleware} from "../redux/actions";
-import React, {useRef} from "react";
+import {setError, storeNewUserDataMiddleware} from "../redux/actions";
+import React from "react";
 import {useHistory} from "react-router-dom";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -16,6 +16,8 @@ import Link from "@material-ui/core/Link";
 import {useFormik} from "formik";
 import * as Yup from 'yup'
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import {Snackbar} from "@material-ui/core";
+import {Alert} from "./Login";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -41,6 +43,11 @@ export default function SignUp(props) {
     let history = useHistory()
     let classes = useStyles()
     let dispatch = useDispatch()
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+    const handleClose = () => {
+        setOpenSnackbar(false);
+    }
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -70,11 +77,11 @@ export default function SignUp(props) {
                 }
             }
             dispatch(storeNewUserDataMiddleware(data))
-
             console.log(loggedUser, 'is logged registered')
-            return history.push('/login')
+            return history.push('/')
         } catch (e) {
             dispatch(setError(e))
+            setOpenSnackbar(e.message)
         }
     }
     return (
@@ -139,9 +146,9 @@ export default function SignUp(props) {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        disabled={!formik.isValid}
+                        disabled={!formik.isValid || formik.isValidating}
                     >
-                        Sign In
+                        Sign Up
                     </Button>
                     <Grid container>
                         <Grid item>
@@ -153,6 +160,11 @@ export default function SignUp(props) {
                 </form>
             </div>
 
+            <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="error">
+                    {openSnackbar}
+                </Alert>
+            </Snackbar>
         </Container>
     )
 }
