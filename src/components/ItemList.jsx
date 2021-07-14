@@ -6,6 +6,7 @@ import {Snackbar} from "@material-ui/core";
 import {Alert} from "./Login";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import Grid from "@material-ui/core/Grid";
 
 export default function ItemList(props) {
     const dispatch = useDispatch()
@@ -23,10 +24,10 @@ export default function ItemList(props) {
                     Loading
                 </Alert>
             </Snackbar>
-            <div className={'item-list'}>
+            <Grid container>
                 {items.length ? items.map((item, index) => <ProductCard key={index}
                                                                         product={item}/>) : 'No Items for ' + categoryName}
-            </div>
+            </Grid>
         </Container>
     )
 }
